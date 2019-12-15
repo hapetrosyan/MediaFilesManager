@@ -14,11 +14,20 @@ def get_file_hash(filename):
         return (readable_hash)
 
 
-def get_location_files_hashes_dict(location):
-    df = pd.DataFrame(columns=['file_hash', 'file_extension'], index=['full_file_path'])
-    for dirpath, dirnames, filenames in os.walk(location):
-        for filename in filenames:
-            full_file_path = os.path.join(dirpath, filename)
-            df.loc[full_file_path] = [get_file_hash(full_file_path), os.path.splitext(filename)[-1].lower()]
+def get_location_files_hashes_dict(location, set_index=True):
+    if set_index == True:
+        df = pd.DataFrame(columns=['file_hash', 'file_extension'], index=['full_file_path'])
+        for dirpath, dirnames, filenames in os.walk(location):
+            for filename in filenames:
+                full_file_path = os.path.join(dirpath, filename)
+                df.loc[full_file_path] = [get_file_hash(full_file_path), os.path.splitext(filename)[-1].lower()]
+    elif set_index == False:
+        df = pd.DataFrame()
+        for dirpath, dirnames, filenames in os.walk(location):
+            for filename in filenames:
+                full_file_path = os.path.join(dirpath, filename)
+                df = df.append ( [[full_file_path, get_file_hash(full_file_path), os.path.splitext(filename)[-1].lower()]] )
+        df.columns=['full_file_path', 'file_hash', 'file_extension']
+
     return df
 
