@@ -8,7 +8,25 @@ numbers > 24042010
 dsc*
 
 image*
+picture*
+*nikon
 
 p1000093
 p1150273
 p_______
+
+pana
+segateoriginalfiles
+dvd
+jpg
+jpeg
+hdd
+archive
+img
+uniquecopiesfolder
+tmp
+mov
+hd
+copied
+not
+to
