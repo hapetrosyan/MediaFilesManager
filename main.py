@@ -3,6 +3,7 @@ import hash_utils as hu
 import pandas as pd
 from datetime import datetime
 import os
+import re
 
 # load csv file
 
@@ -31,4 +32,9 @@ df['full_file_path'] = df['full_file_path'].apply(lambda x: x.replace('/media/ha
 df['full_file_path'] = df['full_file_path'].str.lower()
 df['file_extension'] = df['file_extension'].str.lower()
 # df['path_words'] = df['full_file_path'].apply(lambda x: x.split('/')).apply(lambda x: x[1:])
-df['path_words'] = df['full_file_path'].apply(lambda x: re.split('[ . / _  ,]' , x))
+# df['path_words'] = df['full_file_path'].apply(lambda x: re.split('[ . / _  ,]' , x))
+
+df['full_file_path'] = df['full_file_path'] + '!'
+df_hash_paths_union = df.groupby('file_hash').agg('sum')
+df_hash_paths_union['paths_list'] = df_hash_paths_union['full_file_path'].apply(lambda x: re.split('[ . / _  , !]' , x))
+df_hash_paths_union.to_csv('path_words.csv')
