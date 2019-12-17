@@ -24,14 +24,11 @@ endtime = datetime.now()
 diff = endtime - startime
 print(diff)
 
-# read csv to df
+# analyze csv
 
 df = pd.read_csv('my_csv.csv', names=['full_file_path', 'file_extension', 'file_hash'])
-
-# replace loc path
-
 df['full_file_path'] = df['full_file_path'].apply(lambda x: x.replace('/media/hakob/Seagate Expansion Drive/', ''))
-
-# create path words
-
-df['path_words'] = df['full_file_path'].apply(lambda x: x.split('/')) 
+df['full_file_path'] = df['full_file_path'].str.lower()
+df['file_extension'] = df['file_extension'].str.lower()
+# df['path_words'] = df['full_file_path'].apply(lambda x: x.split('/')).apply(lambda x: x[1:])
+df['path_words'] = df['full_file_path'].apply(lambda x: re.split('[ . / _  ,]' , x))
