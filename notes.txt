@@ -1,0 +1,14 @@
+remove phrazes from list
+
+numbers < 20000000
+numbers > 24042010
+
+*kb
+
+dsc*
+
+image*
+
+p1000093
+p1150273
+p_______
