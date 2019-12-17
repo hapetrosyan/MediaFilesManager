@@ -38,3 +38,13 @@ df['full_file_path'] = df['full_file_path'] + '!'
 df_hash_paths_union = df.groupby('file_hash').agg('sum')
 df_hash_paths_union['paths_list'] = df_hash_paths_union['full_file_path'].apply(lambda x: re.split('[ . / _  , !]' , x)).apply(lambda x: list(dict.fromkeys(x)))
 # df_hash_paths_union.to_csv('path_words.csv')
+
+# finding all unique words to remove useless ones
+
+s = {'jpg'}
+for r in df_hash_paths_union['paths_list']:
+    for elem in r:
+        s.add(elem)
+
+df_s = pd.DataFrame(s)
+df_s.to_csv('df_set.csv', index=False)
