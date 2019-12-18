@@ -16,7 +16,12 @@ ex_list = ['pana',
 'not',
 'to',
 'xary',
-'hakob'
+'hakob',
+'pics',
+'camera', 
+'samsung',
+'uploads','sd', 'card', 'dcim', 'thumbnails', 
+'phone'
 ]
 
 def remove_useless_words(lst):
