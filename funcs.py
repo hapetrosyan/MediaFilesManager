@@ -15,7 +15,8 @@ ex_list = ['pana',
 'copied',
 'not',
 'to',
-'xary'
+'xary',
+'hakob'
 ]
 
 def remove_useless_words(lst):
@@ -28,6 +29,9 @@ def remove_useless_words(lst):
             ex_list_1.append(e)
 
     lst = [x for x in lst if x not in ex_list_1]
+
+    while ("" in lst):
+        lst.remove("")
 
     # IMPLEMENT THE CASE WITH p_______ (p1150273)
     # REMOVE DIGITS THAT ARE NOT DATE
