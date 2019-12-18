@@ -7,16 +7,14 @@ import re
 import funcs
 
 # load csv file
-
+"""
 loc = '/media/hakob/Seagate Expansion Drive'
 # os.remove('my_csv.csv')
 startime = datetime.now()
 
 for dirpath, dirnames, filenames in os.walk(loc):
-    # print(dirpath)
     df = pd.DataFrame()
     for filename in filenames:
-        # print(filename)
         full_file_path = os.path.join(dirpath, filename)
         df = df.append ( [[full_file_path, os.path.splitext(filename)[-1].lower(), hu.get_file_hash(full_file_path)]] )
     df.to_csv('my_csv.csv', mode='a', header=False, index=False)
@@ -25,6 +23,7 @@ for dirpath, dirnames, filenames in os.walk(loc):
 endtime = datetime.now()
 diff = endtime - startime
 print(diff)
+"""
 
 # analyze csv
 
@@ -38,7 +37,7 @@ df_hash_paths_union.to_csv('path_words.csv')
 
 
 # finding all unique words to remove useless ones
-
+"""
 s = {'jpg'}
 for r in df_hash_paths_union['paths_list']:
     for elem in r:
@@ -46,3 +45,4 @@ for r in df_hash_paths_union['paths_list']:
 
 df_s = pd.DataFrame(s)
 df_s.to_csv('df_set.csv', index=False)
+"""
