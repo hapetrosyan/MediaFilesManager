@@ -29,6 +29,7 @@ def remove_useless_words(lst):
 
     lst = [x for x in lst if x not in ex_list_1]
 
-    # IMPLEMENT THE CASE WITH p_______
+    # IMPLEMENT THE CASE WITH p_______ (p1150273)
+    # REMOVE DIGITS THAT ARE NOT DATE
 
     return lst

@@ -4,6 +4,7 @@ import pandas as pd
 from datetime import datetime
 import os
 import re
+import funcs
 
 # load csv file
 
@@ -32,6 +33,7 @@ df['full_file_path'] = df['full_file_path'].apply(lambda x: x.replace('/media/ha
 df['file_extension'] = df['file_extension'].str.lower()
 df_hash_paths_union = df.groupby('file_hash').agg('sum')
 df_hash_paths_union['paths_list'] = df_hash_paths_union['full_file_path'].apply(lambda x: re.split('[ . / _  , !]' , x)).apply(lambda x: list(dict.fromkeys(x)))
+df_hash_paths_union['desc_list'] = df_hash_paths_union['paths_list'].apply(funcs.remove_useless_words)
 df_hash_paths_union.to_csv('path_words.csv')
 
 
