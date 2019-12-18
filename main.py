@@ -7,23 +7,23 @@ import re
 
 # load csv file
 
-# loc = '/media/hakob/Seagate Expansion Drive'
+loc = '/media/hakob/Seagate Expansion Drive'
 # os.remove('my_csv.csv')
-# startime = datetime.now()
+startime = datetime.now()
 
-# for dirpath, dirnames, filenames in os.walk(loc):
-#     # print(dirpath)
-#     df = pd.DataFrame()
-#     for filename in filenames:
-#         # print(filename)
-#         full_file_path = os.path.join(dirpath, filename)
-#         df = df.append ( [[full_file_path, os.path.splitext(filename)[-1].lower(), hu.get_file_hash(full_file_path)]] )
-#     df.to_csv('my_csv.csv', mode='a', header=False, index=False)
-#     print(f'processing folder {dirpath}')
+for dirpath, dirnames, filenames in os.walk(loc):
+    # print(dirpath)
+    df = pd.DataFrame()
+    for filename in filenames:
+        # print(filename)
+        full_file_path = os.path.join(dirpath, filename)
+        df = df.append ( [[full_file_path, os.path.splitext(filename)[-1].lower(), hu.get_file_hash(full_file_path)]] )
+    df.to_csv('my_csv.csv', mode='a', header=False, index=False)
+    print(f'processing folder {dirpath}')
 
-# endtime = datetime.now()
-# diff = endtime - startime
-# print(diff)
+endtime = datetime.now()
+diff = endtime - startime
+print(diff)
 
 # analyze csv
 
