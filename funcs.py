@@ -19,7 +19,7 @@ ex_list = ['pana',
 'hakob',
 'pics',
 'camera', 
-'samsung',
+'managedmediafiles', 'cleanrepo', 'samsung',
 'uploads','sd', 'card', 'dcim', 'thumbnails', 
 'phone'
 ]
@@ -42,3 +42,19 @@ def remove_useless_words(lst):
     # REMOVE DIGITS THAT ARE NOT DATE
 
     return lst
+
+
+def get_descriptions_list(path_str):
+    path_str = path_str.replace('/media/hakob/Seagate Expansion Drive/', '').lower() + '!'
+
+
+# df['full_file_path'] = df['full_file_path'].apply(lambda x: x.replace('/media/hakob/Seagate Expansion Drive/', '')).str.lower() + '!'
+
+
+    path_str = re.split('[ . / _  , !]' , path_str)
+    path_str = list(dict.fromkeys(path_str))
+    path_str = remove_useless_words(path_str)
+
+
+
+    return path_str # .apply(lambda x: re.split('[ . / _  , !]' , x)).apply(lambda x: list(dict.fromkeys(x))).apply(remove_useless_words)
