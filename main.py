@@ -5,6 +5,7 @@ from datetime import datetime
 import os
 import re
 import funcs
+import os
 
 # load csv file
 """
@@ -26,7 +27,7 @@ print(diff)
 """
 
 # analyze csv
-
+'''
 df = pd.read_csv('my_csv.csv', names=['full_file_path', 'file_extension', 'file_hash'])
 df['full_file_path'] = df['full_file_path'].apply(lambda x: x.replace('/media/hakob/Seagate Expansion Drive/', '')).str.lower() + '!'
 df['file_extension'] = df['file_extension'].str.lower()
@@ -34,6 +35,25 @@ df_hash_paths_union = df.groupby('file_hash').agg('sum')
 df_hash_paths_union['paths_list'] = df_hash_paths_union['full_file_path'].apply(lambda x: re.split('[ . / _  , !]' , x)).apply(lambda x: list(dict.fromkeys(x)))
 df_hash_paths_union['desc_list'] = df_hash_paths_union['paths_list'].apply(funcs.remove_useless_words)
 df_hash_paths_union.to_csv('path_words.csv')
+'''
+
+# deleting files
+'''
+df = pd.read_csv('my_csv.csv', names=['full_file_path', 'file_extension', 'file_hash'])
+df = df.sort_values('file_hash')
+df['is_copy'] = df['file_hash'].shift(1) == df['file_hash']
+files_to_del = df[df['is_copy'] == True]['full_file_path']
+for f in files_to_del:
+    if os.path.exists(f):
+        os.remove(f)
+    else:
+        print(f'The file {f} does not exist')
+'''
+
+
+
+
+
 
 
 # finding all unique words to remove useless ones
