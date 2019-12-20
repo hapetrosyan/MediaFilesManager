@@ -10,12 +10,31 @@ import sys
 
 
 
-managed_files_folder = input('enter managed files folder: ')
+
+
+base_folder = input('enter base folder: ')
+
+managed_files_folder = base_folder + '/ManagedFilesFolder'
+guest_files = managed_files_folder + '/guest_files'
+clean_repo = managed_files_folder + '/clean_folder'
+service_files = managed_files_folder + '/service_files' # make hidden
+clean_repo_files_list = service_files + '/clean_repo_files_list.csv'
+
+if not os.path.exists(managed_files_folder):
+    os.mkdir(managed_files_folder)
+if not os.path.exists(guest_files):
+    os.mkdir(guest_files)
+if not os.path.exists(clean_repo):
+    os.mkdir(clean_repo)
+if not os.path.exists(service_files):
+    os.mkdir(service_files)
+
+'''
 print ('Please enter operation type:')
 print ('1 - accept new files')
 print ('2 - shrink existing repo')
 operation_type_code =  input('enter the option : ')
-
+'''
 
 
 # args = sys.argv
@@ -35,60 +54,31 @@ operation_type_code =  input('enter the option : ')
 
 # load csv file
 
-if operation_type_code == '2':
-    all_files_hashes_csv_loc = managed_files_folder + '\\ServiceFiles\\all_files_hashes.csv'
-    print(all_files_hashes_csv_loc)
-    if os.path.exists(managed_files_folder + '\\ServiceFiles\\all_files_hashes.csv'):
-        os.remove(managed_files_folder + '\\ServiceFiles\\all_files_hashes.csv')
+tmp_csv = service_files + '/tmp_csv.csv'
+'''
+if os.path.exists(tmp_csv):
+    os.remove(tmp_csv)
 
-    loc = managed_files_folder + '\\ClearRepo'
-
-    for dirpath, dirnames, filenames in os.walk(loc):
-        df = pd.DataFrame()
-        for filename in filenames:
-            full_file_path = os.path.join(dirpath, filename)
-            df = df.append ( [[full_file_path, os.path.splitext(filename)[-1].lower(), hu.get_file_hash(full_file_path)]] )
-        df.to_csv(all_files_hashes_csv_loc, mode='a', header=False, index=False)
-        print(f'processing folder {dirpath}')
-
-    df = pd.read_csv(all_files_hashes_csv_loc, names=['full_file_path', 'file_extension', 'file_hash'])
-
-    df['full_file_path'] = df['full_file_path'].apply(lambda x: x.replace('/media/hakob/Seagate Expansion Drive/', '')).str.lower() + '!'
-    df['file_extension'] = df['file_extension'].str.lower()
-    df_hash_paths_union = df.groupby('file_hash').agg('sum')
-    df_hash_paths_union['paths_list'] = df_hash_paths_union['full_file_path'].apply(lambda x: re.split('[ . / _  , !]' , x)).apply(lambda x: list(dict.fromkeys(x)))
-    df_hash_paths_union['desc_list'] = df_hash_paths_union['paths_list'].apply(funcs.remove_useless_words)
-    # df_hash_paths_union['desc_list'] = df['full_file_path'].apply(funcs.get_descriptions_list)
-    df_hash_paths_union.to_csv(managed_files_folder + '\\ServiceFiles\\path_words.csv')
-        
-"""
-loc = '/media/hakob/Seagate Expansion Drive'
-# os.remove('my_csv.csv')
-startime = datetime.now()
-
-for dirpath, dirnames, filenames in os.walk(loc):
+for dirpath, dirnames, filenames in os.walk(guest_files):
     df = pd.DataFrame()
     for filename in filenames:
         full_file_path = os.path.join(dirpath, filename)
         df = df.append ( [[full_file_path, os.path.splitext(filename)[-1].lower(), hu.get_file_hash(full_file_path)]] )
-    df.to_csv('my_csv.csv', mode='a', header=False, index=False)
+    df.to_csv(tmp_csv, mode='a', header=False, index=False)
     print(f'processing folder {dirpath}')
+'''
 
-endtime = datetime.now()
-diff = endtime - startime
-print(diff)
-"""
 
 # analyze csv
-'''
-df = pd.read_csv('my_csv.csv', names=['full_file_path', 'file_extension', 'file_hash'])
+
+df = pd.read_csv(tmp_csv, names=['full_file_path', 'file_extension', 'file_hash'])
 df['full_file_path'] = df['full_file_path'].apply(lambda x: x.replace('/media/hakob/Seagate Expansion Drive/', '')).str.lower() + '!'
 df['file_extension'] = df['file_extension'].str.lower()
 df_hash_paths_union = df.groupby('file_hash').agg('sum')
 df_hash_paths_union['paths_list'] = df_hash_paths_union['full_file_path'].apply(lambda x: re.split('[ . / _  , !]' , x)).apply(lambda x: list(dict.fromkeys(x)))
 df_hash_paths_union['desc_list'] = df_hash_paths_union['paths_list'].apply(funcs.remove_useless_words)
-df_hash_paths_union.to_csv('path_words.csv')
-'''
+df_hash_paths_union.to_csv(clean_repo_files_list)
+
 
 # deleting files
 '''
