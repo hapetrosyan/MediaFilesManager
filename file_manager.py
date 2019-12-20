@@ -90,7 +90,7 @@ df_hash_paths_union.to_csv(tmp_files_descr_list, index=False)
 df_guest_list = pd.read_csv(tmp_csv, names=['full_file_path', 'file_extension', 'file_hash'])
 df_guest_list = df_guest_list.sort_values('file_hash')
 df_guest_list['is_copy_in_guest'] = df_guest_list['file_hash'].shift(1) == df_guest_list['file_hash']
-# df_guest_list.to_csv(service_files + '/guest_csv.csv', index=False) # to remove
+df_guest_list.to_csv(service_files + '/guest_csv.csv', index=False) # to remove
 
 df_clean_repo_list = pd.read_csv(clean_repo_file_list)[['file_hash']]
 df_clean_repo_list['is_copy_in_repo'] = True
@@ -114,9 +114,15 @@ for f in files_to_del:
 # create a new folder with current copy date
 # make sure files are being copied with their folders
 
-files_to_move = mrg1[(mrg1['is_copy_in_repo'] != True) | (mrg1['is_copy_in_guest'] == False)]['full_file_path']
+files_to_move = mrg1[(mrg1['is_copy_in_repo'] != True) & (mrg1['is_copy_in_guest'] == False)]['full_file_path']
 files_to_move = pd.DataFrame(files_to_move)
 # print(files_to_move)
+
+
+'''
+ERROR ERROR
+files_to_move and df_hash_paths_union use different full_file_paths to join
+'''
 
 
 repo_add = pd.merge(files_to_move, df_hash_paths_union, how='inner', on='full_file_path')[['file_hash', 'file_extension', 'desc_list', 'full_file_path']]
@@ -132,7 +138,7 @@ clean_repo_insert = repo_add[['file_hash', 'file_extension', 'desc_list' ,'clean
 
 if not os.path.exists(guest_files):
     os.mkdir(guest_files)
-    
+
 clean_repo_insert.to_csv(clean_repo_file_list, mode='a', header=False, index=False)
 
 # finding all unique words to remove useless ones
