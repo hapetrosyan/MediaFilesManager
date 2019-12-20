@@ -110,6 +110,9 @@ for f in files_to_del:
         print(f'The file {f} does not exist')
 
 # move files that were not deleted earlier
+# move and add record in clean_repo_file_list
+# create a new folder with current copy date
+# make sure files are being copied with their folders
 
 files_to_move = mrg1[mrg1['is_copy_in_repo'] != True]['full_file_path']
 
