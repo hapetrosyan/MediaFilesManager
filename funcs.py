@@ -51,7 +51,7 @@ def get_descriptions_list(path_str):
 # df['full_file_path'] = df['full_file_path'].apply(lambda x: x.replace('/media/hakob/Seagate Expansion Drive/', '')).str.lower() + '!'
 
 
-    path_str = re.split('[ . / _  , !]' , path_str)
+    path_str = re.split('[ . / _  , ! \ ]' , path_str)
     path_str = list(dict.fromkeys(path_str))
     path_str = remove_useless_words(path_str)
 
