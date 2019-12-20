@@ -89,25 +89,29 @@ df_hash_paths_union.to_csv(tmp_files_descr_list, index=False)
 
 df_guest_list = pd.read_csv(tmp_csv, names=['full_file_path', 'file_extension', 'file_hash'])
 df_guest_list = df_guest_list.sort_values('file_hash')
-df_guest_list['is_copy'] = df_guest_list['file_hash'].shift(1) == df_guest_list['file_hash']
-df_guest_list.to_csv(service_files + '/guest_csv.csv', index=False) # to remove
+df_guest_list['is_copy_in_guest'] = df_guest_list['file_hash'].shift(1) == df_guest_list['file_hash']
+# df_guest_list.to_csv(service_files + '/guest_csv.csv', index=False) # to remove
+
+df_clean_repo_list = pd.read_csv(clean_repo_file_list)[['file_hash']]
+df_clean_repo_list['is_copy_in_repo'] = True
+# df_clean_replo_hashes = df_clean_repo_list['file_hash']
 
 
 
+# delete files that have copy in clean or guest repo
 
-# deleting files
-'''
-df = pd.read_csv('my_csv.csv', names=['full_file_path', 'file_extension', 'file_hash'])
-df = df.sort_values('file_hash')
-df['is_copy'] = df['file_hash'].shift(1) == df['file_hash']
-files_to_del = df[df['is_copy'] == True]['full_file_path']
+mrg1 = pd.merge(df_guest_list, df_clean_repo_list, how='left', on='file_hash')
+# print(mrg1[(mrg1['is_copy_in_repo'] == True) | (mrg1['is_copy_in_guest'] == True)])
+files_to_del = mrg1[(mrg1['is_copy_in_repo'] == True) | (mrg1['is_copy_in_guest'] == True)]['full_file_path']
 for f in files_to_del:
     if os.path.exists(f):
         os.remove(f)
     else:
         print(f'The file {f} does not exist')
-'''
 
+# move files that were not deleted earlier
+
+files_to_move = mrg1[mrg1['is_copy_in_repo'] != True]['full_file_path']
 
 
 
