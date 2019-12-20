@@ -18,7 +18,8 @@ managed_files_folder = base_folder + '/ManagedFilesFolder'
 guest_files = managed_files_folder + '/guest_files'
 clean_repo = managed_files_folder + '/clean_folder'
 service_files = managed_files_folder + '/service_files' # make hidden
-clean_repo_files_list = service_files + '/clean_repo_files_list.csv'
+tmp_csv = service_files + '/tmp_csv.csv'
+tmp_files_descr_list = service_files + '/tmp_files_descr_list.csv'
 
 if not os.path.exists(managed_files_folder):
     os.mkdir(managed_files_folder)
@@ -59,6 +60,9 @@ tmp_csv = service_files + '/tmp_csv.csv'
 if os.path.exists(tmp_csv):
     os.remove(tmp_csv)
 
+if os.path.exists(tmp_files_descr_list):
+    os.remove(tmp_files_descr_list)
+
 for dirpath, dirnames, filenames in os.walk(guest_files):
     df = pd.DataFrame()
     for filename in filenames:
@@ -72,12 +76,13 @@ for dirpath, dirnames, filenames in os.walk(guest_files):
 # analyze csv
 
 df = pd.read_csv(tmp_csv, names=['full_file_path', 'file_extension', 'file_hash'])
-df['full_file_path'] = df['full_file_path'].apply(lambda x: x.replace('/media/hakob/Seagate Expansion Drive/', '')).str.lower() + '!'
+# df['full_file_path'] = df['full_file_path'].apply(lambda x: x.replace('/media/hakob/Seagate Expansion Drive/', '')).str.lower() + '!'
+df['full_file_path'] = df['full_file_path'].apply(lambda x: x.replace(guest_files, '')).str.lower() + '!'
 df['file_extension'] = df['file_extension'].str.lower()
 df_hash_paths_union = df.groupby('file_hash').agg('sum')
 df_hash_paths_union['paths_list'] = df_hash_paths_union['full_file_path'].apply(lambda x: re.split('[ . / _  , !]' , x)).apply(lambda x: list(dict.fromkeys(x)))
 df_hash_paths_union['desc_list'] = df_hash_paths_union['paths_list'].apply(funcs.remove_useless_words)
-df_hash_paths_union.to_csv(clean_repo_files_list)
+df_hash_paths_union.to_csv(tmp_files_descr_list)
 
 
 # deleting files
