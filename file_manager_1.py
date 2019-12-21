@@ -83,7 +83,7 @@ df = pd.read_csv(tmp_csv, names=['full_file_path', 'file_extension', 'file_hash'
 df['full_file_path_tosplit'] = df['full_file_path'].apply(lambda x: x.replace(guest_files, '')).str.lower() + '!'
 df['file_extension'] = df['file_extension'].str.lower()
 df_hash_paths_union = df.groupby('file_hash', as_index=False).agg('sum')
-df_hash_paths_union['paths_list'] = df_hash_paths_union['full_file_path_tosplit'].apply(lambda x: re.split('[ . / _ \\\  , !]' , x)).apply(lambda x: list(dict.fromkeys(x)))
+df_hash_paths_union['paths_list'] = df_hash_paths_union['full_file_path_tosplit'].apply(lambda x: re.split('[ . / _ /\  , !]' , x)).apply(lambda x: list(dict.fromkeys(x)))
 df_hash_paths_union['desc_list'] = df_hash_paths_union['paths_list'].apply(funcs.remove_useless_words)
 df_hash_paths_union.to_csv(tmp_files_descr_list, index=False)   # to remove
 
@@ -120,13 +120,13 @@ files_to_move = pd.DataFrame(files_to_move)
 
 repo_add = pd.merge(files_to_move, df_hash_paths_union, how='inner', on='file_hash')[['file_hash', 'file_extension', 'desc_list', 'full_file_path']]
 date_time = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-repo_add['clean_repo_file_path'] = clean_repo + '\\' + repo_add['full_file_path'].apply(lambda x: x.replace(guest_files, date_time))
+repo_add['clean_repo_file_path'] = clean_repo + '/' + repo_add['full_file_path'].apply(lambda x: x.replace(guest_files, date_time))
 repo_add['date_copied'] =  date_time
 
 
-# os.mkdir(clean_repo + '\\' + date_time)
+# os.mkdir(clean_repo + '/' + date_time)
 shutil.move(guest_files, clean_repo)
-os.rename(clean_repo + '\\guest_files', clean_repo + '\\' + date_time)
+os.rename(clean_repo + '/guest_files', clean_repo + '/' + date_time)
 clean_repo_insert = repo_add[['file_hash', 'file_extension', 'desc_list' ,'clean_repo_file_path', 'date_copied']]
 
 if not os.path.exists(guest_files):
