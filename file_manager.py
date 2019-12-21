@@ -12,12 +12,12 @@ from datetime import datetime
 
 
 
-# base_folder =  '/home/hakob/temp/mfm' # input('enter base folder: ')
-base_folder = 'C:/MFM'
+base_folder =  input('enter base folder: ')
+# base_folder = 'C:/MFM'
 managed_files_folder = base_folder + '/ManagedFilesFolder'
 guest_files = managed_files_folder + '/guest_files'
 clean_repo = managed_files_folder + '/clean_repo'
-service_files = managed_files_folder + '/service_files' # make hidden
+service_files = managed_files_folder + '/.service_files' # make hidden
 tmp_csv = service_files + '/tmp_csv.csv'
 tmp_files_descr_list = service_files + '/tmp_files_descr_list.csv'
 clean_repo_file_list = service_files + '/clean_repo_file_list.csv'
@@ -124,6 +124,7 @@ if repo_add.shape[0] > 0:
     # os.mkdir(clean_repo + '/' + date_time)
     shutil.move(guest_files, clean_repo)
     os.rename(clean_repo + '/guest_files', clean_repo + '/' + date_time)
+    funcs.removeEmptyfolders(clean_repo + '/' + date_time)
     clean_repo_insert = repo_add[['file_hash', 'file_extension', 'desc_list' ,'clean_repo_file_path', 'date_copied']]
 
 
