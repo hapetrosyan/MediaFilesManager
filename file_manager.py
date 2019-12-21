@@ -12,8 +12,8 @@ from datetime import datetime
 
 
 
-base_folder = '/home/hakob/temp/mfm' # input('enter base folder: ')
-
+# base_folder =  '/home/hakob/temp/mfm' # input('enter base folder: ')
+base_folder = 'C:\MFM'
 managed_files_folder = base_folder + '/ManagedFilesFolder'
 guest_files = managed_files_folder + '/guest_files'
 clean_repo = managed_files_folder + '/clean_repo'

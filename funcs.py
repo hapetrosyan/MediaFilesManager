@@ -1,32 +1,11 @@
 import re
+import os, sys
 
-ex_list = ['pana',
-'segateoriginalfiles',
-'dvd',
-'jpg',
-'jpeg',
-'hdd',
-'archive',
-'img',
-'uniquecopiesfolder',
-'tmp',
-'mov',
-'hd',
-'copied',
-'not',
-'to',
-'xary',
-'hakob',
-'pics',
-'camera', 
-'managedmediafiles', 'cleanrepo', 'samsung',
-'uploads','sd', 'card', 'dcim', 'thumbnails', 
-'phone'
-]
+exception_list = ['pana','segateoriginalfiles','dvd','jpg','jpeg','hdd','archive','img','uniquecopiesfolder','tmp','mov','hd','copied','not','to','xary','hakob','pics','camera', 'managedmediafiles', 'cleanrepo', 'samsung','uploads','sd', 'card', 'dcim', 'thumbnails', 'phone']
 
 def remove_useless_words(lst):
 
-    lst = [x for x in lst if x not in ex_list]
+    lst = [x for x in lst if x not in exception_list]
     ex_list_1 = []
 
     for e in lst:
@@ -57,4 +36,15 @@ def get_descriptions_list(path_str):
 
 
 
-    return path_str # .apply(lambda x: re.split('[ . / _  , !]' , x)).apply(lambda x: list(dict.fromkeys(x))).apply(remove_useless_words)
+    return path_str # .apply(lambda x: re.split('[ . / _  , !]' , x)).apply(lambda x: list(dict.fromkeys(x))).apply(remove_useless_words
+
+
+def removeEmptyfolders(path):
+    for (_path, _dirs, _files) in os.walk(path, topdown=False):
+        if _files: continue # skip remove
+        try:
+            os.rmdir(_path)
+            print('Remove :', _path)
+        except OSError as ex:
+            # print('Error :', ex)
+            print('some files are left in gust folder')

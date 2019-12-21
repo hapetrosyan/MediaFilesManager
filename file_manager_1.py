@@ -111,11 +111,6 @@ for f in files_to_del:
     else:
         print(f'The file {f} does not exist')
 
-# move files that were not deleted earlier
-# move and add record in clean_repo_file_list
-# create a new folder with current copy date
-# make sure files are being copied with their folders
-
 files_to_move = mrg1[(mrg1['is_copy_in_repo'] != True) & (mrg1['is_copy_in_guest'] == False)]['file_hash']
 files_to_move = pd.DataFrame(files_to_move)
 # print(files_to_move)
@@ -130,10 +125,15 @@ if repo_add.shape[0] > 0:
     shutil.move(guest_files, clean_repo)
     os.rename(clean_repo + '/guest_files', clean_repo + '/' + date_time)
     clean_repo_insert = repo_add[['file_hash', 'file_extension', 'desc_list' ,'clean_repo_file_path', 'date_copied']]
-    if not os.path.exists(guest_files):
-        os.mkdir(guest_files)
+
 
     clean_repo_insert.to_csv(clean_repo_file_list, mode='a', header=False, index=False)
+
+funcs.removeEmptyfolders(guest_files)
+
+if not os.path.exists(guest_files):
+    os.mkdir(guest_files)
+
 
 # to do list
 # clean empty folder in clear repo
