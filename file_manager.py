@@ -9,14 +9,20 @@ import os
 import sys
 import shutil
 from datetime import datetime
+import argparse
 
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--base_folder', required=True, help='base folder help')
+args = parser.parse_args()
 
-base_folder =  input('enter base folder: ')
+
+base_folder = args.base_folder
+# base_folder =  input('enter base folder: ')
 # base_folder = 'C:/MFM'
-managed_files_folder = base_folder + '/ManagedFilesFolder'
-guest_files = managed_files_folder + '/guest_files'
-clean_repo = managed_files_folder + '/clean_repo'
+managed_files_folder = base_folder + '/MANAGED_FILES_FOLDER'
+guest_files = managed_files_folder + '/GUEST_FILES'
+clean_repo = managed_files_folder + '/CLEAN_REPO'
 service_files = managed_files_folder + '/.service_files' # make hidden
 tmp_csv = service_files + '/tmp_csv.csv'
 tmp_files_descr_list = service_files + '/tmp_files_descr_list.csv'
@@ -87,12 +93,13 @@ df_hash_paths_union = df.groupby('file_hash', as_index=False).agg({'full_file_pa
 
 df_hash_paths_union['paths_list'] = df_hash_paths_union['full_file_path_tosplit'].apply(lambda x: re.split('[ . / _ \\\  , !]' , x)).apply(lambda x: list(dict.fromkeys(x)))
 df_hash_paths_union['desc_list'] = df_hash_paths_union['paths_list'].apply(funcs.remove_useless_words)
-df_hash_paths_union.to_csv(tmp_files_descr_list, index=False)   # to remove
+# df_hash_paths_union.to_csv(tmp_files_descr_list, index=False)   # to remove
 
 df_guest_list = pd.read_csv(tmp_csv, names=['full_file_path', 'file_extension', 'file_hash'])
 df_guest_list = df_guest_list.sort_values('file_hash')
 df_guest_list['is_copy_in_guest'] = df_guest_list['file_hash'].shift(1) == df_guest_list['file_hash']
-df_guest_list.to_csv(service_files + '/guest_csv.csv', index=False) # to remove
+# df_guest_list.to_csv(service_files + '/guest_csv.csv', index=False) # to remove
+os.remove(tmp_csv)
 
 df_clean_repo_list = pd.read_csv(clean_repo_file_list)[['file_hash']]
 df_clean_repo_list['is_copy_in_repo'] = True
