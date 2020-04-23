@@ -12,14 +12,12 @@ from datetime import datetime
 import argparse
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--base_folder', required=True, help='base folder help')
-args = parser.parse_args()
-
-
-base_folder = args.base_folder
+# parser = argparse.ArgumentParser()
+# parser.add_argument('--base_folder', required=True, help='base folder help')
+# args = parser.parse_args()
+# base_folder = args.base_folder
 # base_folder =  input('enter base folder: ')
-# base_folder = 'C:/MFM'
+base_folder = '/home/hakob/Pictures/Emma'
 managed_files_folder = base_folder + '/MANAGED_FILES_FOLDER'
 guest_files = managed_files_folder + '/GUEST_FILES'
 clean_repo = managed_files_folder + '/CLEAN_REPO'
@@ -130,7 +128,7 @@ if repo_add.shape[0] > 0:
     repo_add['date_copied'] =  date_time
     # os.mkdir(clean_repo + '/' + date_time)
     shutil.move(guest_files, clean_repo)
-    os.rename(clean_repo + '/guest_files', clean_repo + '/' + date_time)
+    os.rename(clean_repo + '/GUEST_FILES', clean_repo + '/' + date_time)
     funcs.removeEmptyfolders(clean_repo + '/' + date_time)
     clean_repo_insert = repo_add[['file_hash', 'file_extension', 'desc_list' ,'clean_repo_file_path', 'date_copied']]
 
