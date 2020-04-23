@@ -12,16 +12,17 @@ from datetime import datetime
 import argparse
 
 
-# parser = argparse.ArgumentParser()
-# parser.add_argument('--base_folder', required=True, help='base folder help')
-# args = parser.parse_args()
-# base_folder = args.base_folder
+parser = argparse.ArgumentParser()
+parser.add_argument('--base_folder', required=True, help='base folder help')
+args = parser.parse_args()
+base_folder = args.base_folder
+
 # base_folder =  input('enter base folder: ')
-base_folder = '/home/hakob/Pictures/Emma'
+# base_folder = '/home/hakob/Pictures/Emma'
 managed_files_folder = base_folder + '/MANAGED_FILES_FOLDER'
 guest_files = managed_files_folder + '/GUEST_FILES'
 clean_repo = managed_files_folder + '/CLEAN_REPO'
-service_files = managed_files_folder + '/.service_files' # make hidden
+service_files = managed_files_folder + '/service_files' # make hidden
 tmp_csv = service_files + '/tmp_csv.csv'
 tmp_files_descr_list = service_files + '/tmp_files_descr_list.csv'
 clean_repo_file_list = service_files + '/clean_repo_file_list.csv'
