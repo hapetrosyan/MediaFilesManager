@@ -44,7 +44,7 @@ def removeEmptyfolders(path):
         if _files: continue # skip remove
         try:
             os.rmdir(_path)
-            print('Remove :', _path)
+            # print('Remove :', _path)
         except OSError as ex:
             # print('Error :', ex)
             print('some files are left in gust folder')

@@ -161,7 +161,7 @@ for dirpath, dirnames, filenames in os.walk(files_to_delete_from_repo):
         df_files_to_delete = df_files_to_delete.append ( [{'del_file_hash': hu.get_file_hash(full_file_path)}] )
         
 if df_files_to_delete.shape[0] > 0:
-    print('del folder ...........................................')
+    print('deleting files in FILES_TO_DELETE folder ...........................................')
 
     df_clean_repo_list_after_fill = pd.read_csv(clean_repo_file_list)
     df_clean_repo_list_after_fill = df_clean_repo_list_after_fill[~df_clean_repo_list_after_fill['file_hash'].isin(df_files_to_delete['del_file_hash'])]
@@ -169,6 +169,7 @@ if df_files_to_delete.shape[0] > 0:
     # print(df_clean_repo_list_after_fill)
     df_clean_repo_list_after_fill.to_csv(clean_repo_file_list, index=False)
     shutil.rmtree(files_to_delete_from_repo)
+    print(f'{df_files_to_delete.shape[0]} files deleted form repository')
     if not os.path.exists(files_to_delete_from_repo):
         os.mkdir(files_to_delete_from_repo)
     
