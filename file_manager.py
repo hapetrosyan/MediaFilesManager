@@ -153,9 +153,8 @@ if not os.path.exists(guest_files):
 
 # processing FILES_TO_DELETE
 
-
+df_files_to_delete = pd.DataFrame()
 for dirpath, dirnames, filenames in os.walk(files_to_delete_from_repo):
-    df_files_to_delete = pd.DataFrame()
     for filename in filenames:
         full_file_path = os.path.join(dirpath, filename)
         df_files_to_delete = df_files_to_delete.append ( [{'del_file_hash': hu.get_file_hash(full_file_path)}] )
