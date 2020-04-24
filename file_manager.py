@@ -14,8 +14,13 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--base_folder', required=True, help='base folder help')
+parser.add_argument('--delete_from_repo', required=False, help='reindex clean repo help')
 args = parser.parse_args()
 base_folder = args.base_folder
+delete_from_repo = args.delete_from_repo
+
+if delete_from_repo:
+    print(f'delete_from_repo: {delete_from_repo}')
 
 # base_folder =  input('enter base folder: ')
 # base_folder = '/home/hakob/Pictures/Emma'
@@ -26,6 +31,7 @@ service_files = managed_files_folder + '/service_files' # make hidden
 tmp_csv = service_files + '/tmp_csv.csv'
 tmp_files_descr_list = service_files + '/tmp_files_descr_list.csv'
 clean_repo_file_list = service_files + '/clean_repo_file_list.csv'
+files_to_delete_from_repo = managed_files_folder + '/FILES_TO_DELETE'
 
 if not os.path.exists(managed_files_folder):
     os.mkdir(managed_files_folder)
@@ -37,6 +43,8 @@ if not os.path.exists(service_files):
     os.mkdir(service_files)
 if not os.path.exists(clean_repo_file_list):
     shutil.copyfile('clean_repo_file_list.csv', clean_repo_file_list) 
+if not os.path.exists(files_to_delete_from_repo):
+    os.mkdir(files_to_delete_from_repo)
 
 '''
 print ('Please enter operation type:')
@@ -140,6 +148,31 @@ funcs.removeEmptyfolders(guest_files)
 
 if not os.path.exists(guest_files):
     os.mkdir(guest_files)
+
+
+
+# processing FILES_TO_DELETE
+
+
+for dirpath, dirnames, filenames in os.walk(files_to_delete_from_repo):
+    df_files_to_delete = pd.DataFrame()
+    for filename in filenames:
+        full_file_path = os.path.join(dirpath, filename)
+        df_files_to_delete = df_files_to_delete.append ( [{'del_file_hash': hu.get_file_hash(full_file_path)}] )
+        
+if df_files_to_delete.shape[0] > 0:
+    print('del folder ...........................................')
+
+    df_clean_repo_list_after_fill = pd.read_csv(clean_repo_file_list)
+    df_clean_repo_list_after_fill = df_clean_repo_list_after_fill[~df_clean_repo_list_after_fill['file_hash'].isin(df_files_to_delete['del_file_hash'])]
+    # print(df_clean_repo_list_after_fill[~df_clean_repo_list_after_fill['file_hash'].isin(df_files_to_delete['del_file_hash'])])
+    # print(df_clean_repo_list_after_fill)
+    df_clean_repo_list_after_fill.to_csv(clean_repo_file_list, index=False)
+    shutil.rmtree(files_to_delete_from_repo)
+    if not os.path.exists(files_to_delete_from_repo):
+        os.mkdir(files_to_delete_from_repo)
+    
+
 
 
 # to do list
