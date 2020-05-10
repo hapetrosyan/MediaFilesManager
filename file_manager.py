@@ -32,6 +32,7 @@ tmp_csv = service_files + '/tmp_csv.csv'
 tmp_files_descr_list = service_files + '/tmp_files_descr_list.csv'
 clean_repo_file_list = service_files + '/clean_repo_file_list.csv'
 files_to_delete_from_repo = managed_files_folder + '/FILES_TO_DELETE'
+deleted_files_log = service_files + '/deleted_files_log.csv'
 
 if not os.path.exists(managed_files_folder):
     os.mkdir(managed_files_folder)
@@ -124,6 +125,8 @@ for f in files_to_del:
         os.remove(f)
     else:
         print(f'The file {f} does not exist')
+
+files_to_del.to_csv(deleted_files_log, index=False)
 
 files_to_move = mrg1[(mrg1['is_copy_in_repo'] != True) & (mrg1['is_copy_in_guest'] == False)]['file_hash']
 files_to_move = pd.DataFrame(files_to_move)
