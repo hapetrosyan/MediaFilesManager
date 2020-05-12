@@ -11,6 +11,10 @@ import shutil
 from datetime import datetime
 import argparse
 
+start_time = datetime.now()
+print('process started .......')
+
+print(f'assigning arguments, variables and paths ... time passed: {datetime.now() - start_time}')
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--base_folder', required=True, help='base folder help')
@@ -80,17 +84,20 @@ if os.path.exists(tmp_csv):
 if os.path.exists(tmp_files_descr_list):
     os.remove(tmp_files_descr_list)
 
+print(f'walking through the guest files ... time passed: {datetime.now() - start_time}')
+
 for dirpath, dirnames, filenames in os.walk(guest_files):
     df = pd.DataFrame()
+    print(f'processing folder {dirpath} ... time passed: {datetime.now() - start_time}')
     for filename in filenames:
         full_file_path = os.path.join(dirpath, filename)
         df = df.append ( [[full_file_path, os.path.splitext(filename)[-1].lower(), hu.get_file_hash(full_file_path)]] )
     df.to_csv(tmp_csv, mode='a', header=False, index=False)
-    print(f'processing folder {dirpath}')
-
+    print(f'folder {dirpath} processed ... time passed: {datetime.now() - start_time}')
 
 
 # analyze csv
+print(f'analyzing csv ... time passed: {datetime.now() - start_time}')
 
 df = pd.read_csv(tmp_csv, names=['full_file_path', 'file_extension', 'file_hash'])
 # df['full_file_path'] = df['full_file_path'].apply(lambda x: x.replace('/media/hakob/Seagate Expansion Drive/', '')).str.lower() + '!'
@@ -120,6 +127,7 @@ df_clean_repo_list['is_copy_in_repo'] = True
 mrg1 = pd.merge(df_guest_list, df_clean_repo_list, how='left', on='file_hash')
 # print(mrg1[(mrg1['is_copy_in_repo'] == True) | (mrg1['is_copy_in_guest'] == True)])
 files_to_del = mrg1[(mrg1['is_copy_in_repo'] == True) | (mrg1['is_copy_in_guest'] == True)]['full_file_path']
+print(f'removing duplicate files ... time passed: {datetime.now() - start_time}')
 for f in files_to_del:
     if os.path.exists(f):
         os.remove(f)
@@ -175,7 +183,7 @@ if df_files_to_delete.shape[0] > 0:
     if not os.path.exists(files_to_delete_from_repo):
         os.mkdir(files_to_delete_from_repo)
     
-
+print(f'process finished, time passed: {datetime.now() - start_time}')
 
 
 # to do list
